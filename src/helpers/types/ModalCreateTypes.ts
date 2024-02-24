@@ -6,6 +6,7 @@ namespace Form {
     export type FormDataInputText = {
         name: string;
         value: string;
+        type: "text" | "number"
     }
     export type FormDataInputNumber = {
         name: string;
@@ -25,12 +26,20 @@ namespace Form {
         cost: FormDataInputNumber;
         stock: FormDataInputNumber;
     }
-    export interface FormCreateArgs {
+    export type FormInput = {
         name: string;
         category: string;
         price: string;
         cost: string;
         stock: string;
-        options?: FormDataInputOption[]
+        options?: string[]
+    }
+    export interface FormInputArgs {
+        name: string;
+        category: string;
+        price: number;
+        cost: number;
+        stock: number;
+        options?: string[]
     }
 }

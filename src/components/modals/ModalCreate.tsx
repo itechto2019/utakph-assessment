@@ -6,16 +6,17 @@ import FormItem from "./FormItem";
 interface Prop {
     onSubmit: (arg: boolean) => void;
     toggle: boolean;
-    data?: Model.Products;
-    mode?: "create" | "edit"
+    title: string;
 }
-const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
+
+const ModalCreate = ({ title, toggle, onSubmit }: Prop) => {
+
     const [info, setAlert] = useState<Form.ErrorInterface | undefined>()
     const [toggleOption, setToggleOption] = useState<boolean>(false)
     const [activeIndex, setActiveIndex] = useState<number>()
     const [toggleOptionEditor, setToggleOptionEditor] = useState<boolean>(false)
-    const [formOptions, setFormOptions] = useState<Form.FormDataInputOption>()
-    const [formData, setFormData] = useState<Form.FormCreateArgs>({
+    const [option, setOption] = useState<string>('')
+    const [formData, setFormData] = useState<Form.FormInput>({
         name: '',
         category: '',
         cost: '',
@@ -23,8 +24,8 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
         stock: '',
         options: []
     })
-    const handleInput = (event: any) => {
-        const { name, value }: Form.FormDataInputText = event.target
+    const handleInput = async (e: any) => {
+        const { name, value }: Form.FormDataInputText = e.target
         setFormData((prev: any) => {
             return {
                 ...prev,
@@ -32,18 +33,27 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
             }
         })
     }
+
     const handleSave = async (e: any) => {
         e.preventDefault()
-        const error = await validator.validateFormCreate(formData)
+        const data: Form.FormInputArgs = {
+            name: formData?.name,
+            category: formData?.category,
+            cost: parseFloat(formData?.cost),
+            price: parseFloat(formData?.price),
+            stock: parseInt(formData?.stock),
+            options: formData?.options
+        }
+        const error = await validator.validateProductForm(data)
         if (error) {
             setAlert({
                 messages: error.messages,
                 type: error.type
             })
-            console.log(error)
             return
         }
-        const result = await ProductApi.createProduct(formData)
+        setAlert(undefined)
+        const result = await ProductApi.createProduct(data)
         setAlert({
             messages: result.messages,
             type: result.type
@@ -52,19 +62,14 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
     }
     const handleClose = () => {
         onSubmit(false)
+        setAlert(undefined)
     }
     const handleOptionInput = (e: any) => {
-        const { name, value }: Form.FormDataInputText = e.target
-        const prop_name = name.replace('opt_', '')
-        setFormOptions((prev: any) => {
-            return {
-                ...prev,
-                [prop_name]: value
-            }
-        })
+        const { value } = e.target
+        setOption(value)
     }
     const handleSaveOption = async () => {
-        const error = await validator.validateOption(formOptions)
+        const error = await validator.validateOption(option)
         if (error) {
             setAlert((prev: any) => {
                 return {
@@ -78,14 +83,8 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
         setFormData((prev: any) => {
             return {
                 ...prev,
-                options: [...prev.options, formOptions]
+                options: [...prev.options, option]
             }
-        })
-        setFormOptions({
-            name: '',
-            stock: '',
-            price: '',
-            cost: ''
         })
         setToggleOption(!toggleOption)
         setAlert(undefined)
@@ -100,28 +99,20 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
         setActiveIndex(index)
     }
 
-    const handleEditSave = async (index: number, newData: Form.FormDataInputOption) => {
+    const handleEditSave = async (index: number, item: string) => {
         if (!formData.options) return
-        const previous = formData.options.filter((opt, idx) => idx !== index)
-        const updated_items = [...previous, newData]
+        const updated = formData.options
+        updated[index] = item
 
-        const error = await validator.validateOption(newData)
+        const error = await validator.validateOption(item)
         if (error) {
-            setAlert((prev: any) => {
-                return {
-                    ...prev,
-                    messages: [
-                        ...prev.messages,
-                        ...error.messages
-                    ]
-                }
-            })
+            setAlert(error)
             return
         }
         setFormData((prev: any) => {
             return {
                 ...prev,
-                options: updated_items
+                options: updated
             }
         })
         setActiveIndex(undefined)
@@ -135,10 +126,10 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
         <div className="modal">
             <div className="modal-form">
                 <div className="modal-header">
-                    <div className="modal-title">Modal Title</div>
+                    <div className="modal-title">Create Form</div>
                 </div>
                 <div className="modal-body">
-                    <div className="modal_subtitle">Create Product</div>
+                    <div className="modal_subtitle">{title}</div>
                     <AlertMessage
                         messages={info?.messages}
                         type={info?.type}
@@ -146,22 +137,22 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
                     <form className="modal-form">
                         <div className="flex-column">
                             <div className="input-wrapper">
-                                <input type="text" name="name" placeholder="Name" defaultValue={data?.name} required onChange={handleInput} />
+                                <input type="text" name="name" placeholder="Name" defaultValue={formData.name} required onChange={handleInput} />
                             </div>
                             <div className="input-wrapper">
-                                <input type="text" name="category" placeholder="Category" required onChange={handleInput} />
+                                <input type="text" name="category" placeholder="Category" defaultValue={formData.category} required onChange={handleInput} />
                             </div>
                         </div>
                         <div className="flex-column">
                             <div className="input-wrapper">
-                                <input type="text" name="price" placeholder="Price" required onChange={handleInput} />
+                                <input type="text" name="price" inputMode="decimal" placeholder="Price" defaultValue={formData.price} required onChange={handleInput} />
                             </div>
                             <div className="input-wrapper">
-                                <input type="text" name="cost" placeholder="Cost" required onChange={handleInput} />
+                                <input type="text" inputMode="decimal" name="cost" placeholder="Cost" defaultValue={formData.cost} required onChange={handleInput} />
                             </div>
                         </div>
                         <div className="input-wrapper">
-                            <input type="text" name="stock" placeholder="Stock" required onChange={handleInput} />
+                            <input type="text" name="stock" placeholder="Stock" defaultValue={formData.stock} required onChange={handleInput} />
                         </div>
                         <div className="form-subtitle">Items</div>
                         {
@@ -172,22 +163,8 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
                             toggleOption && !toggleOptionEditor &&
                             <>
                                 <div className="form-subtitle">Create item</div>
-                                <div className="flex-column">
-                                    <div className="input-wrapper">
-                                        <input type="text" name="opt_name" placeholder="Name" required onChange={handleOptionInput} />
-                                    </div>
-                                    <div className="input-wrapper">
-                                        <input type="text" name="opt_price" placeholder="Price" required onChange={handleOptionInput} />
-                                    </div>
-
-                                </div>
-                                <div className="flex-column">
-                                    <div className="input-wrapper">
-                                        <input type="text" name="opt_stock" placeholder="Stock" required onChange={handleOptionInput} />
-                                    </div>
-                                    <div className="input-wrapper">
-                                        <input type="text" name="opt_cost" placeholder="Cost" required onChange={handleOptionInput} />
-                                    </div>
+                                <div className="input-wrapper">
+                                    <input type="text" placeholder="Option" required onChange={handleOptionInput} />
                                 </div>
                             </>
                         }
@@ -197,7 +174,7 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
                         </div>
                         <div className="modal-actions">
                             <div className="action-button danger" onClick={handleClose}>Cancel</div>
-                            <div className="action-button primary" onClick={handleSave}>{mode === "create" ? `Create` : 'Update'}</div>
+                            <div className="action-button primary" onClick={handleSave}>Create</div>
                         </div>
                     </form>
                 </div>
@@ -205,4 +182,4 @@ const Modal = ({ mode, toggle, data, onSubmit }: Prop) => {
         </div>
     </div>
 }
-export default Modal
+export default ModalCreate

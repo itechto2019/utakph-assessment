@@ -2,11 +2,15 @@ import { useEffect, useState } from 'react'
 import { db } from '../libraries/firebase'
 import { onValue, ref } from 'firebase/database'
 import moment from 'moment'
-import Modal from '../components/modals/Modal'
+import Modal from '../components/modals/ModalCreate'
+import ModalEdit from '../components/modals/ModalEdit'
+import ModalDelete from '../components/modals/ModalDelete'
+type ModalType = "create" | "edit" | "delete" | string
 const Home = () => {
     const [toggle, setToggle] = useState<boolean>(false)
     const [activeIndex, setActiveIndex] = useState<number>()
-    const [products, setProducts] = useState<Model.Products[]>([])
+    const [modalType, setModalType] = useState<ModalType>("")
+    const [products, setProducts] = useState<any[]>([])
     useEffect(() => {
         const dbRef = ref(db, 'products')
         const unsub = onValue(dbRef, (snap) => {
@@ -41,7 +45,7 @@ const Home = () => {
                             <th>Category</th>
                             <th>Price</th>
                             <th>Cost</th>
-                            <th>Variant</th>
+                            <th>Options</th>
                             <th>Date Created</th>
                             <th>Action</th>
                         </tr>
@@ -53,18 +57,34 @@ const Home = () => {
                                     <td>{product.category}</td>
                                     <td>{product.price}</td>
                                     <td>{product.cost}</td>
-                                    <td>{product.options?.map((opt, idx) => (<div key={idx}>{opt.name}</div>))}</td>
+                                    <td>
+                                        <div className="table-items">
+                                            {product.options?.map((opt: string, idx: number) => (<div key={idx}>[{opt}]</div>))}
+                                        </div>
+                                    </td>
                                     <td>{moment(product.createdAt).format('YYYY-MM-DD hh:mm A')}</td>
                                     <td>
                                         <div className="t-actions">
-                                            <div className="action-button primary" onClick={() => handleToggleEdit(key)}>Edit</div>
-                                            <div className="action-button danger">Delete</div>
+                                            <div className="action-button primary" onClick={() => {
+                                                handleToggleEdit(key)
+                                                setModalType("edit")
+                                            }}>Edit</div>
+                                            <div className="action-button danger" onClick={() => {
+                                                handleToggleEdit(key)
+                                                setModalType("delete")
+                                            }}>Delete</div>
                                         </div>
                                     </td>
-                                    <Modal
-                                        toggle={activeIndex === key}
+                                    <ModalEdit
+                                        title={"Edit Product"}
+                                        toggle={activeIndex === key && modalType === "edit"}
                                         data={product}
-                                        mode="edit"
+                                        onSubmit={() => handleToggleEdit(key)}
+                                    />
+                                    <ModalDelete
+                                        title={"Delete Product"}
+                                        toggle={activeIndex === key && modalType === "delete"}
+                                        data={product}
                                         onSubmit={() => handleToggleEdit(key)}
                                     />
                                 </tr>
@@ -77,6 +97,7 @@ const Home = () => {
             {
                 toggle &&
                 <Modal
+                    title={"Create Product"}
                     toggle={toggle}
                     onSubmit={(arg: boolean) => setToggle(arg)}
                 />

@@ -74,7 +74,9 @@ $color-danger : #E68163;
                 .modal_subtitle {
                     font-size: 24px;
                 }
-
+                .modal_prompt {
+                    font-size: 18px;
+                }
                 .modal-form {
                     overflow-y: auto;
                     height: 300px;
@@ -245,6 +247,14 @@ $color-danger : #E68163;
                 th,
                 td {
                     padding: 10px;
+                    .table-items {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                }
+                tr {
+                    border: 0px solid $color-secondary;
+                    border-bottom-width: 1px;
                 }
 
                 .t-body {
