@@ -4,3 +4,261 @@
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+
+$color-default : #FFFFFF;
+
+$color-primary : #6B7FD7;
+$color-secondary: #8D99AE;
+$color-success : #2CD161;
+$color-danger : #E68163;
+
+.action-button {
+    padding: 10px;
+    border-radius: 4px;
+    color: $color-default;
+    min-width: 100px;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+
+    &.primary {
+        background-color: $color-primary;
+
+        &:hover {
+            transition: 300ms;
+            background-color: rgba($color-primary, 0.9);
+        }
+    }
+
+    &.danger {
+        background-color: $color-danger;
+
+        &:hover {
+            transition: 300ms;
+            background-color: rgba($color-danger, 0.9);
+        }
+    }
+}
+
+// Modal block
+.modal-overlay {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(#000000, 0.90);
+
+    .modal {
+        background-color: $color-default;
+        border-radius: 20px;
+        width: 500px;
+        padding: 20px;
+
+        .modal-form {
+
+            .modal-header {
+                margin-bottom: 5px;
+
+                .modal-title {
+                    font-size: 32px;
+                }
+            }
+
+            .modal-body {
+                margin-bottom: 5px;
+
+                .modal_subtitle {
+                    font-size: 24px;
+                }
+
+                .modal-form {
+                    overflow-y: auto;
+                    height: 300px;
+                    scroll-behavior: smooth;
+                    scrollbar-width: none;
+                    .form-subtitle {
+                        font-size: 17px;
+                        font-weight: 500;
+                        margin-bottom: 5px;
+                    }
+
+                    .form-edit {
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        margin: 5px 5px;
+                        gap: 5px;
+
+                        svg {
+                            cursor: pointer;
+                        }
+
+                        span {
+                            font-size: 12px;
+                            cursor: pointer;
+                            user-select: none;
+                        }
+                    }
+
+                    .modal-container {
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                    }
+
+                    .input-wrapper {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 5px;
+
+                        input {
+                            flex: 1;
+                            padding: 10px;
+                            padding-left: 15px;
+                            outline: none;
+                            border: 1px solid $color-secondary;
+                            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                            font-size: 12px;
+
+                            &.success {
+                                border-color: $color-danger;
+                            }
+
+                            &.danger {
+                                border-color: $color-success;
+                            }
+                        }
+                    }
+
+                    .flex-column {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        margin: 5px 0px;
+
+                        .input-wrapper {
+                            flex: 1;
+                        }
+                    }
+                }
+            }
+
+            .modal-actions {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 10px;
+            }
+
+            .modal-footer {
+                margin-bottom: 5px;
+
+                .modal-actions {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    gap: 10px;
+                }
+            }
+        }
+    }
+}
+
+// Modal endblock
+
+// Alert Box block
+.alert-box {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    color: $color-default;
+    font-size: 14px;
+    animation: fadeIn 300ms forwards;
+
+    .alert-title {
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    .alert-messages {
+        .alert-info {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 500;
+            margin: 5px 0px;
+        }
+    }
+
+    &.success {
+        background-color: $color-success;
+    }
+
+    &.danger {
+        background-color: $color-danger;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+}
+
+// Alert Box endblock
+.main {
+    background-color: #F7F7F7;
+
+    .title-component {
+        font-size: 23px;
+        padding: 10px;
+    }
+
+    .table-container {
+        background-color: #ffffff;
+        height: 600px;
+
+        .table-wrapper {
+            padding: 10px;
+
+            .button-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                padding: 0px 20px;
+            }
+
+            .table-striped {
+                width: 100%;
+                border-collapse: collapse;
+
+                th {
+                    text-align: left;
+                }
+
+                th,
+                td {
+                    padding: 10px;
+                }
+
+                .t-body {
+                    .t-actions {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                    }
+
+                    tr:nth-child(even) {
+                        background-color: #cecaca2d;
+                    }
+                }
+            }
+        }
+    }
+}

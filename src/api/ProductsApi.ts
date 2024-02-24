@@ -1,42 +1,74 @@
 import { v4 as uuid } from 'uuid'
-import { ref, set } from "firebase/database"
+import { ref, set, update } from "firebase/database"
 import { db } from "../libraries/firebase"
 import moment from 'moment';
 
-export namespace Products {
-    export type ProductsCreateArgs = {
-        uid?: string;
-        name: string;
-        categories: "food" | "clothes" | "accessories";
-        options?: string[];
-        price: number;
-        cost: number;
-        stock: number;
-        createdAt?: Date;
-        updatedAt?: Date;
-    }
-}
 class ProductAPI {
-
-    async createProduct(args: Products.ProductsCreateArgs) {
+    async createProduct(formData: Form.FormCreateArgs) {
         try {
             const uid = uuid()
-            const data: Products.ProductsCreateArgs = {
+            const data: Model.Products = {
                 uid: uid,
-                categories: args.categories,
-                options: args.options,
-                name: args.name,
-                price: args.price,
-                cost: args.cost,
-                stock: args.stock,
+                name: formData.name,
+                category: formData.category,
+                price: parseInt(formData.price),
+                cost: parseInt(formData.cost),
+                stock: parseInt(formData.stock),
                 createdAt: moment().toDate(),
                 updatedAt: moment().toDate()
             }
+            if (formData?.options && formData?.options.length > 0) {
+                data.options = formData.options.map((opt) => {
+                    const item_id = uuid()
+                    const option: Model.OptionItem = {
+                        item_id: item_id,
+                        name: opt.name,
+                        stock: parseInt(opt.stock)
+                    }
+                    if (opt?.price) {
+                        option.price = parseInt(opt.price)
+                    }
+                    return option
+                })
+            }
             const dbRef = ref(db, `products/${uid}`)
             set(dbRef, data)
-            return "Data save!"
+            const response: Form.ErrorInterface = {
+                messages: "Data save!",
+                type: "success"
+            }
+            return response
         } catch (error) {
-            return "Error while saving data."
+            const response: Form.ErrorInterface = {
+                messages: "Error while saving data.",
+                type: "danger"
+            }
+            return response
+        }
+    }
+    async updateProduct(formData: Model.Products) {
+        try {
+            const data: Model.Products = {
+                name: formData.name,
+                category: formData.category,
+                price: formData.price,
+                cost: formData.cost,
+                stock: formData.stock,
+                updatedAt: moment().toDate()
+            }
+            const dbRef = ref(db, `products/${formData.uid}`)
+            update(dbRef, data)
+            const response: Form.ErrorInterface = {
+                messages: "Data updated!",
+                type: "success"
+            }
+            return response
+        } catch (error) {
+            const response: Form.ErrorInterface = {
+                messages: "Error while saving data.",
+                type: "danger"
+            }
+            return response
         }
     }
 }
