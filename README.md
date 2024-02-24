@@ -1,30 +1,80 @@
-# React + TypeScript + Vite
+## Table of contents
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- [Table of contents](#table-of-contents)
+- [Setup](#how-to-run)
+- [Requirements](#requirements)
+- [Installing Packages](#install-packages)
+- [Development](#development)
+- [Production](#build-production)
 
-Currently, two official plugins are available:
+# How to run?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Requirements
+Node v20.x
+NPM v10.x
+YARN v1.2x
+Firebase credentials
 
-## Expanding the ESLint configuration
+### Install packages
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Clone first. 
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+``` bash
+$ git clone https://github.com/itechto2019/utakph-assessment.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Go to root directory.
+
+``` bash
+$ cd utakph-crud
+```
+create or add .env file on root of the project and fill these:
+
+``` bash
+VITE_FIREBASE_API_KEY
+VITE_FIREBASE_AUTH_DOMAIN
+VITE_FIREBASE_DATABASE_URL
+VITE_FIREBASE_PROJECT_ID
+VITE_FIREBASE_STORAGE_BUCKET
+VITE_FIREBASE_MESSAGING_ID
+VITE_FIREBASE_APP_ID
+VITE_FIREBASE_MEASUREMENT_ID
+```
+
+Run any of the following command.
+
+``` bash
+$ npm i
+```
+
+``` bash
+$ npm install
+```
+
+``` bash
+$ yarn install
+```
+
+### Development
+
+To run app, run again any of the following command.
+
+``` bash
+$ yarn dev
+```
+
+``` bash
+$ npm run dev
+```
+
+### Build production
+
+To build the app in production mode, run any of the following command.
+
+``` bash
+$ yarn build
+```
+
+``` bash
+$ npm run build
+```
