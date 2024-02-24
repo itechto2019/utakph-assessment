@@ -5,17 +5,21 @@ import moment from 'moment'
 import Modal from '../components/modals/ModalCreate'
 import ModalEdit from '../components/modals/ModalEdit'
 import ModalDelete from '../components/modals/ModalDelete'
+import { useDispatch, useSelector } from 'react-redux'
 type ModalType = "create" | "edit" | "delete" | string
 const Home = () => {
+    const { data } = useSelector((state: any) => state.form)
     const [toggle, setToggle] = useState<boolean>(false)
     const [activeIndex, setActiveIndex] = useState<number>()
     const [modalType, setModalType] = useState<ModalType>("")
     const [products, setProducts] = useState<any[]>([])
+
+    const dispatch = useDispatch()
     useEffect(() => {
         const dbRef = ref(db, 'products')
         const unsub = onValue(dbRef, (snap) => {
             const data = snap.val()
-            const dataToArray: any = data && Object.entries(data).map(([key, product]) => product) || null
+            const dataToArray: any = data && Object.values(data).map((product) => product) || null
             setProducts(dataToArray)
         })
         return () => unsub()
@@ -45,6 +49,7 @@ const Home = () => {
                             <th>Category</th>
                             <th>Price</th>
                             <th>Cost</th>
+                            <th>Stock</th>
                             <th>Options</th>
                             <th>Date Created</th>
                             <th>Action</th>
@@ -57,6 +62,7 @@ const Home = () => {
                                     <td>{product.category}</td>
                                     <td>{product.price}</td>
                                     <td>{product.cost}</td>
+                                    <td>{product.stock}</td>
                                     <td>
                                         <div className="table-items">
                                             {product.options?.map((opt: string, idx: number) => (<div key={idx}>[{opt}]</div>))}
@@ -66,27 +72,38 @@ const Home = () => {
                                     <td>
                                         <div className="t-actions">
                                             <div className="action-button primary" onClick={() => {
+                                                dispatch({ type: 'form/setFormData', payload: product })
                                                 handleToggleEdit(key)
                                                 setModalType("edit")
                                             }}>Edit</div>
                                             <div className="action-button danger" onClick={() => {
+                                                dispatch({ type: 'form/setFormData', payload: product })
                                                 handleToggleEdit(key)
                                                 setModalType("delete")
                                             }}>Delete</div>
                                         </div>
                                     </td>
-                                    <ModalEdit
-                                        title={"Edit Product"}
-                                        toggle={activeIndex === key && modalType === "edit"}
-                                        data={product}
-                                        onSubmit={() => handleToggleEdit(key)}
-                                    />
-                                    <ModalDelete
-                                        title={"Delete Product"}
-                                        toggle={activeIndex === key && modalType === "delete"}
-                                        data={product}
-                                        onSubmit={() => handleToggleEdit(key)}
-                                    />
+                                    {
+                                        data &&
+                                        <ModalEdit
+                                            title={"Edit Product"}
+                                            toggle={activeIndex === key && modalType === "edit"}
+                                            onSubmit={() => {
+                                                handleToggleEdit(key)
+                                                setModalType("")
+                                            }}
+                                        />
+                                    }
+                                    {data &&
+                                        <ModalDelete
+                                            title={"Delete Product"}
+                                            toggle={activeIndex === key && modalType === "delete"}
+                                            onSubmit={() => {
+                                                handleToggleEdit(key)
+                                                setModalType("")
+                                            }}
+                                        />
+                                    }
                                 </tr>
                             ))}
                         </tbody>

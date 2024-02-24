@@ -5,7 +5,7 @@ class FormValidator {
         const { error } = Schema.validate(data, { abortEarly: false })
         if (!error) return
         const errors: Form.ErrorInterface = {
-            messages: error.details.map((err, key) => err.message),
+            messages: error.details.map((err) => err.message),
             type: "danger"
         }
         return errors

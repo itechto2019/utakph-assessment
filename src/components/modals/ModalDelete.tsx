@@ -1,28 +1,32 @@
 import { useState } from "react";
-import validator from "../../helpers/validations/Validators";
 import AlertMessage from "../alerts/AlertMessage";
 import ProductApi from "../../api/ProductsApi";
+import { useDispatch, useSelector } from "react-redux";
 interface Prop {
     onSubmit: (arg: boolean) => void;
     toggle: boolean;
-    data: any;
     title: string;
 }
 
-const ModalDelete = ({ title, toggle, data, onSubmit }: Prop) => {
+const ModalDelete = ({ title, toggle, onSubmit }: Prop) => {
+    const { data } = useSelector((state: any) => state.form)
     const [info, setAlert] = useState<Form.ErrorInterface | undefined>()
+
+    const dispatch = useDispatch()
+
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         setAlert(undefined)
         const result = await ProductApi.deleteProduct(data.uid)
         setAlert(result)
         handleClose()
+        dispatch({ type: 'form/setFormData', payload: null })
     }
     const handleClose = () => {
         onSubmit(false)
         setAlert(undefined)
     }
-    return toggle && <div className="modal-overlay">
+    return toggle && data && <div className="modal-overlay">
         <div className="modal">
             <div className="modal-form">
                 <div className="modal-header">
