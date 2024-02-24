@@ -19,18 +19,18 @@ Firebase credentials
 
 Clone first. 
 
-``` bash
-$ git clone https://github.com/itechto2019/utakph-assessment.git
+```bash
+git clone https://github.com/itechto2019/utakph-assessment.git
 ```
 
 Go to root directory.
 
-``` bash
-$ cd utakph-crud
+```bash
+cd utakph-crud
 ```
 create or add .env file on root of the project and fill these:
 
-``` bash
+```bash
 VITE_FIREBASE_API_KEY
 VITE_FIREBASE_AUTH_DOMAIN
 VITE_FIREBASE_DATABASE_URL
@@ -43,38 +43,38 @@ VITE_FIREBASE_MEASUREMENT_ID
 
 Run any of the following command.
 
-``` bash
-$ npm i
+```bash
+npm i
 ```
 
-``` bash
-$ npm install
+```bash
+npm install
 ```
 
-``` bash
-$ yarn install
+```bash
+yarn install
 ```
 
 ### Development
 
 To run app, run again any of the following command.
 
-``` bash
-$ yarn dev
+```bash
+yarn dev
 ```
 
-``` bash
-$ npm run dev
+```bash
+npm run dev
 ```
 
 ### Build production
 
 To build the app in production mode, run any of the following command.
 
-``` bash
-$ yarn build
+```bash
+yarn build
 ```
 
-``` bash
-$ npm run build
+```bash
+npm run build
 ```
