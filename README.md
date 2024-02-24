@@ -1,18 +1,21 @@
 ## Table of contents
 
 - [Table of contents](#table-of-contents)
-- [Setup](#how-to-run)
+- [Setup](#setup)
 - [Requirements](#requirements)
 - [Installing Packages](#install-packages)
 - [Development](#development)
 - [Production](#build-production)
 
-# How to run?
+## Setup
 
 ## Requirements
 Node v20.x
+
 NPM v10.x
+
 YARN v1.2x
+
 Firebase credentials
 
 ### Install packages
@@ -20,13 +23,13 @@ Firebase credentials
 Clone first. 
 
 ```bash
-git clone https://github.com/itechto2019/utakph-assessment.git
+$ git clone https://github.com/itechto2019/utakph-assessment.git
 ```
 
 Go to root directory.
 
 ```bash
-cd utakph-crud
+$ cd utakph-crud
 ```
 create or add .env file on root of the project and fill these:
 
@@ -44,15 +47,15 @@ VITE_FIREBASE_MEASUREMENT_ID
 Run any of the following command.
 
 ```bash
-npm i
+$ npm i
 ```
 
 ```bash
-npm install
+$ npm install
 ```
 
 ```bash
-yarn install
+$ yarn install
 ```
 
 ### Development
@@ -60,11 +63,11 @@ yarn install
 To run app, run again any of the following command.
 
 ```bash
-yarn dev
+$ yarn dev
 ```
 
 ```bash
-npm run dev
+$ npm run dev
 ```
 
 ### Build production
@@ -72,9 +75,9 @@ npm run dev
 To build the app in production mode, run any of the following command.
 
 ```bash
-yarn build
+$ yarn build
 ```
 
 ```bash
-npm run build
+$ npm run build
 ```
