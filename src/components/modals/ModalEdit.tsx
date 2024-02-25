@@ -85,7 +85,7 @@ const ModalEdit = ({ title, toggle, onSubmit }: Prop) => {
         setFormData((prev: any) => {
             return {
                 ...prev,
-                options: prev.options ? [...prev.options, option] : []
+                options: prev.options ? [...prev.options, option] : [option]
             }
         })
         setToggleOption(!toggleOption)
@@ -103,9 +103,8 @@ const ModalEdit = ({ title, toggle, onSubmit }: Prop) => {
 
     const handleEditSave = async (index: number, item: string) => {
         if (!formData.options) return
-        const updated = formData.options
-        updated[index] = item
-
+        const previous = formData.options
+        const array_updated = previous.map((pr : any, idx : number) => idx === index ? item : pr)
         const error = await validator.validateOption(item)
         if (error) {
             setAlert(error)
@@ -114,7 +113,7 @@ const ModalEdit = ({ title, toggle, onSubmit }: Prop) => {
         setFormData((prev: any) => {
             return {
                 ...prev,
-                options: updated
+                options: array_updated
             }
         })
         setActiveIndex(undefined)
